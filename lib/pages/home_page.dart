@@ -12,110 +12,194 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<FoodModel> foodList = FoodModel.list;
-  PageController pageController = PageController(viewportFraction: .7);
+  PageController pageController = PageController(viewportFraction: .8);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(top: 25.0),
-        child: Column(
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: Stack(
           children: <Widget>[
-            _customAppBar(),
-            Expanded(
-              child: ListView(
+            Padding(
+              padding: EdgeInsets.only(left: 60),
+              child: _buildRightSection(),
+            ),
+            Container(
+              color: AppColors.greenColor,
+              height: MediaQuery.of(context).size.height,
+              width: 60,
+              padding: EdgeInsets.only(top: 25),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Container(
-                    height: 300,
-                    child: PageView.builder(
-                      controller: pageController,
-                      itemBuilder: (context, index) => Padding(
-                        padding: const EdgeInsets.only(right: 40),
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(
-                                top: 40,
-                                bottom: 10,
-                                right: 40,
-                              ),
-                              padding: EdgeInsets.all(20),
-                              decoration: BoxDecoration(
-                                color: AppColors.greenColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(32),
-                                ),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Expanded(child: SizedBox()),
-                                  Row(
-                                    children: <Widget>[
-                                      RatingBar(
-                                        initialRating: 3,
-                                        minRating: 1,
-                                        direction: Axis.horizontal,
-                                        allowHalfRating: true,
-                                        itemCount: 5,
-                                        itemSize: 16,
-                                        unratedColor: Colors.black12,
-                                        itemPadding: EdgeInsets.symmetric(
-                                            horizontal: 4.0),
-                                        itemBuilder: (context, _) => Icon(
-                                          Icons.star,
-                                          color: Colors.black,
-                                        ),
-                                        onRatingUpdate: (rating) {
-                                          print(rating);
-                                        },
-                                      ),
-                                      SizedBox(width: 10),
-                                      Text('(120 Reviews)'),
-                                    ],
-                                  ),
-                                  Text(
-                                    '${foodList[index].name}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 28,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topRight,
-                              child: Transform.rotate(
-                                angle: math.pi / 3,
-                                child: Image(
-                                  width: 180,
-                                  image: AssetImage(
-                                      'assets/images/${foodList[index].imgPath}'),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    width: 40,
+                    height: 40,
+                    margin: EdgeInsets.only(top: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                      image: DecorationImage(
+                        image: ExactAssetImage('assets/images/profile.jpg'),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 40),
-                    child: Text(
-                      'Popular',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 32,
+                  Container(
+                    width: 40,
+                    height: 40,
+                    margin: EdgeInsets.only(bottom: 16),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
                       ),
+                      color: Colors.white,
+                    ),
+                    child: Center(
+                      child: Icon(FlutterIcons.menu),
                     ),
                   ),
-                  _buildPopularList(),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildRightSection() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 25.0),
+      child: Column(
+        children: <Widget>[
+          _customAppBar(),
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                Container(
+                  height: 350,
+                  child: PageView.builder(
+                    physics: BouncingScrollPhysics(),
+                    controller: pageController,
+                    itemCount: foodList.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.only(right: 40),
+                      child: Stack(
+                        children: <Widget>[
+                          _buildBackGround(index),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Transform.rotate(
+                              angle: math.pi / 3,
+                              child: Image(
+                                width: 180,
+                                image: AssetImage(
+                                    'assets/images/${foodList[index].imgPath}'),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 30,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: AppColors.redColor,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  vertical: 8, horizontal: 16),
+                              child: Text(
+                                '\$${foodList[index].price.toInt()}',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Text(
+                    'Popular',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 32,
+                    ),
+                  ),
+                ),
+                _buildPopularList(),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildBackGround(int index) {
+    return Container(
+      margin: EdgeInsets.only(
+        top: 50,
+        bottom: 20,
+        right: 50,
+      ),
+      padding: EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: AppColors.greenColor,
+        borderRadius: BorderRadius.all(
+          Radius.circular(32),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(child: SizedBox()),
+          Row(
+            children: <Widget>[
+              RatingBar(
+                initialRating: 3,
+                minRating: 1,
+                direction: Axis.horizontal,
+                allowHalfRating: true,
+                itemCount: 5,
+                itemSize: 12,
+                unratedColor: Colors.black12,
+                itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Colors.black,
+                ),
+                onRatingUpdate: (rating) {
+                  print(rating);
+                },
+              ),
+              SizedBox(width: 10),
+              Text(
+                "(120 Reviews)",
+                style: TextStyle(
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+          Text(
+            "${foodList[index].name}",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          ),
+        ],
       ),
     );
   }
