@@ -20,7 +20,23 @@ class _DetailPageState extends State<DetailPage> {
         children: <Widget>[
           SizedBox(height: 25),
           _customAppBar(),
-          Text('Food details:'),
+          Container(
+            height: 270,
+            width: MediaQuery.of(context).size.width,
+            child: Stack(
+              children: <Widget>[
+                Image(
+                  image: AssetImage('assets/images/bg.png'),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Image(
+                    image: AssetImage('assets/images/${widget.data.imgPath}'),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -52,7 +68,7 @@ class _DetailPageState extends State<DetailPage> {
                           color: AppColors.redColor,
                         ),
                       ),
-                      SizedBox(width: 24),
+                      SizedBox(width: 30),
                       _buildCounter(),
                     ],
                   ),
@@ -136,17 +152,22 @@ class _DetailPageState extends State<DetailPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(
-                Radius.circular(12),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: Container(
+              padding: EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(12),
+                ),
               ),
-            ),
-            child: Icon(
-              FlutterIcons.left,
-              size: 16,
+              child: Icon(
+                FlutterIcons.left,
+                size: 16,
+              ),
             ),
           ),
           Container(
@@ -159,7 +180,7 @@ class _DetailPageState extends State<DetailPage> {
             ),
             child: Icon(
               FlutterIcons.shop,
-              size: 16,
+              size: 12,
             ),
           ),
         ],
