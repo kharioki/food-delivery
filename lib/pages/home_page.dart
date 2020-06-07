@@ -3,7 +3,10 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:food_delivery/core/consts.dart';
 import 'package:food_delivery/core/flutter_icons.dart';
 import 'package:food_delivery/models/food_model.dart';
+import 'package:food_delivery/pages/detail_page.dart';
 import 'dart:math' as math;
+
+import 'package:food_delivery/widgets/app_clipper.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,6 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<FoodModel> foodList = FoodModel.list;
   PageController pageController = PageController(viewportFraction: .8);
+  var paddingLeft = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +69,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Positioned(
-              bottom: 25,
+              bottom: 0,
               child: Transform.rotate(
                 angle: -math.pi / 2,
                 alignment: Alignment.topLeft,
@@ -74,22 +78,23 @@ class _HomePageState extends State<HomePage> {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        _buildMenu('Vegetables'),
-                        _buildMenu('Chicken'),
-                        _buildMenu('Beef'),
-                        _buildMenu('Thai'),
+                        _buildMenu('Vegetables', 0),
+                        _buildMenu('Chicken', 1),
+                        _buildMenu('Beef', 2),
+                        _buildMenu('Thai', 3),
                       ],
                     ),
                     AnimatedContainer(
                       duration: Duration(milliseconds: 250),
-                      margin: EdgeInsets.only(left: 0),
+                      margin: EdgeInsets.only(left: paddingLeft),
                       width: 150,
-                      height: 70,
+                      height: 75,
                       child: Stack(
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: ClipPath(
+                              clipper: AppClipper(),
                               child: Container(
                                 width: 150,
                                 height: 60,
@@ -101,9 +106,12 @@ class _HomePageState extends State<HomePage> {
                             alignment: Alignment.center,
                             child: Transform.rotate(
                               angle: math.pi / 2,
-                              child: Icon(
-                                FlutterIcons.arrow,
-                                size: 16,
+                              child: Padding(
+                                padding: const EdgeInsets.only(right: 40),
+                                child: Icon(
+                                  FlutterIcons.arrow,
+                                  size: 16,
+                                ),
                               ),
                             ),
                           ),
@@ -120,15 +128,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Container _buildMenu(String menu) {
-    return Container(
-      width: 150,
-      padding: EdgeInsets.only(top: 16),
-      child: Center(
-        child: Text(
-          menu,
-          style: TextStyle(
-            fontSize: 18,
+  Widget _buildMenu(String menu, int index) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          paddingLeft = index * 150.0;
+        });
+      },
+      child: Container(
+        width: 150,
+        padding: EdgeInsets.only(top: 16),
+        child: Center(
+          child: Text(
+            menu,
+            style: TextStyle(
+              fontSize: 18,
+            ),
           ),
         ),
       ),
@@ -150,44 +165,53 @@ class _HomePageState extends State<HomePage> {
                     physics: BouncingScrollPhysics(),
                     controller: pageController,
                     itemCount: foodList.length,
-                    itemBuilder: (context, index) => Padding(
-                      padding: const EdgeInsets.only(right: 40),
-                      child: Stack(
-                        children: <Widget>[
-                          _buildBackGround(index),
-                          Align(
-                            alignment: Alignment.topRight,
-                            child: Transform.rotate(
-                              angle: math.pi / 3,
-                              child: Image(
-                                width: 180,
-                                image: AssetImage(
-                                    'assets/images/${foodList[index].imgPath}'),
-                              ),
-                            ),
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => DetailPage(foodList[index]),
                           ),
-                          Positioned(
-                            bottom: 0,
-                            right: 30,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.redColor,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
-                                ),
-                              ),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 16),
-                              child: Text(
-                                '\$${foodList[index].price.toInt()}',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 40),
+                        child: Stack(
+                          children: <Widget>[
+                            _buildBackGround(index),
+                            Align(
+                              alignment: Alignment.topRight,
+                              child: Transform.rotate(
+                                angle: math.pi / 3,
+                                child: Image(
+                                  width: 180,
+                                  image: AssetImage(
+                                      'assets/images/${foodList[index].imgPath}'),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              bottom: 0,
+                              right: 30,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: AppColors.redColor,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                ),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 16),
+                                child: Text(
+                                  '\$${foodList[index].price.toInt()}',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
