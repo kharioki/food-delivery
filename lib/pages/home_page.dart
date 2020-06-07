@@ -256,12 +256,12 @@ class _HomePageState extends State<HomePage> {
           Row(
             children: <Widget>[
               RatingBar(
-                initialRating: 3,
+                initialRating: 4,
                 minRating: 1,
                 direction: Axis.horizontal,
                 allowHalfRating: true,
                 itemCount: 5,
-                itemSize: 12,
+                itemSize: 10,
                 unratedColor: Colors.black12,
                 itemPadding: EdgeInsets.symmetric(horizontal: 1.0),
                 itemBuilder: (context, _) => Icon(
@@ -318,7 +318,7 @@ class _HomePageState extends State<HomePage> {
         child: Row(
           children: <Widget>[
             Image(
-              width: 100,
+              width: 80,
               image: AssetImage('assets/images/${foodList[index].imgPath}'),
             ),
             SizedBox(width: 16),
