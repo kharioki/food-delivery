@@ -64,7 +64,72 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Positioned(
+              bottom: 25,
+              child: Transform.rotate(
+                angle: -math.pi / 2,
+                alignment: Alignment.topLeft,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        _buildMenu('Vegetables'),
+                        _buildMenu('Chicken'),
+                        _buildMenu('Beef'),
+                        _buildMenu('Thai'),
+                      ],
+                    ),
+                    AnimatedContainer(
+                      duration: Duration(milliseconds: 250),
+                      margin: EdgeInsets.only(left: 0),
+                      width: 150,
+                      height: 70,
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: ClipPath(
+                              child: Container(
+                                width: 150,
+                                height: 60,
+                                color: AppColors.greenColor,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Transform.rotate(
+                              angle: math.pi / 2,
+                              child: Icon(
+                                FlutterIcons.arrow,
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Container _buildMenu(String menu) {
+    return Container(
+      width: 150,
+      padding: EdgeInsets.only(top: 16),
+      child: Center(
+        child: Text(
+          menu,
+          style: TextStyle(
+            fontSize: 18,
+          ),
         ),
       ),
     );
